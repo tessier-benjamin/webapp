@@ -18,16 +18,24 @@ public class viewAllFilm extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>viewAllFilm</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>viewAllFilm at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            out.println("<!DOCTYPE html>"
+                    + "<html>"
+                    + "<head>"
+                    + "<title>viewAllFilm</title>"
+                    + "</head>"
+                    + "<body>"
+                    + "<div class=\"container\">"
+                    + "<div class=\"row\">"
+                    + "<div class=\"col-12\">"
+                    + "<h1>Saisir un film</h1>"
+                    + "<hr>"
+                    + "<i>Liste des films.</i>"
+                    + "</div>"
+                    + "</div>"
+                    + "</div>"
+                    + "</body>"
+                    + "</html>"
+                    + "");
         }
     }
 

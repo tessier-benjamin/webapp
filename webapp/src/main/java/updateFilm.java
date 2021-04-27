@@ -14,20 +14,45 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/updateFilm")
 public class updateFilm extends HttpServlet {
-	 protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+	  protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 	            throws ServletException, IOException {
 	        response.setContentType("text/html;charset=UTF-8");
 	        try (PrintWriter out = response.getWriter()) {
-	            /* TODO output your page here. You may use following sample code. */
-	            out.println("<!DOCTYPE html>");
-	            out.println("<html>");
-	            out.println("<head>");
-	            out.println("<title>updateFilm</title>");            
-	            out.println("</head>");
-	            out.println("<body>");
-	            out.println("<h1>updateFilm at " + request.getContextPath() + "</h1>");
-	            out.println("</body>");
-	            out.println("</html>");
+	            out.println("<!DOCTYPE html>"
+	                    + "<html>"
+	                    + "<head>"
+	                    + "<title>updateFilm</title>"
+	                    + "</head>"
+	                    + "<body>"
+	                    + "<div class=\"container\">"
+	                    + "<div class=\"row\">"
+	                    + "<div class=\"col-12\">"
+	                    + "<h1>Mettre à jour un film</h1>"
+	                    + "<hr>"
+	                    + "<form>"
+	                    + "<label for=\"basic-url\" class=\"form-label\">Nom du film</label>"
+	                    + "<input type=\"texte\" class=\"form-control\" name=\"FilmTitre\" - ["+request.getParameter("FilmTitre")+"]\"/>"
+	                    + "<br>"
+	                    + "<label for=\"basic-url\" class=\"form-label\">Année de sortie du film</label>"
+	                    + "<input type=\"texte\" class=\"form-control\" name=\"FilmAnneeDeSortie\" - ["+request.getParameter("FilmAnneeDeSortie")+"]\"/>"
+	                    + "<br>"
+	                    + "<label for=\"basic-url\" class=\"form-label\">Numéro du film</label>"
+	                    + "<input type=\"texte\" class=\"form-control\" name=\"FilmNumeroEpisode\" - ["+request.getParameter("FilmNumeroEpisode")+"]\"/>"
+	                    + "<br>"
+	                    + "<label for=\"basic-url\" class=\"form-label\">Coût du film</label>"
+	                    + "<input type=\"texte\" class=\"form-control\" name=\"FilmCout\"  - ["+request.getParameter("FilmCout")+"]\"/>"
+	                    + "<br>"
+	                    + "<label for=\"basic-url\" class=\"form-label\">Recette du film</label>"
+	                    + "<input type=\"texte\" class=\"form-control\" name=\"FilmRecette\"  - ["+request.getParameter("FilmRecette")+"]\"/>"
+	                    + "<br>"
+	                    + "<input type=\"submit\" class=\"btn btn-success\" value=\"Valider\"/>"
+	                    + "</form>"
+	                    + "</div>"
+	                    + "</div>"
+	                    + "</div>"
+	                    + "</body>"
+	                    + "</html>"
+	                    + "");
 	        }
 	    }
 
@@ -69,4 +94,5 @@ public class updateFilm extends HttpServlet {
 	    public String getServletInfo() {
 	        return "Short description";
 	    }// </editor-fold>
+
 }
