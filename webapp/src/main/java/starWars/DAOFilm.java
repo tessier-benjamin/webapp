@@ -16,19 +16,16 @@ public class DAOFilm {
 	private String bddPassword = "";
 	private String bddIP = "localhost";
 	private String bddPort = "3306";
-
-	String Login, Password, Host, Port;
 	String strClassName = "com.mysql.jdbc.Driver";
+	String bddUrl = "jdbc:mysql://" + this.bddIP + ":" + this.bddPort + "/" + this.bddName;
 	Connection conn;
 	Statement stLogin;
-	String bddUrl = "jdbc:mysql://" + this.bddIP + ":" + this.bddPort + "/" + this.bddName;
 
 	public DAOFilm() {
 		try {
 			Class.forName(this.strClassName);
 			this.conn = DriverManager.getConnection(this.bddUrl, this.bddLogin, this.bddPassword);
-			this.stLogin = (Statement) conn.createStatement();
-			System.out.println("=> DAOFilm ready");
+			this.stLogin = conn.createStatement();
 		} catch (ClassNotFoundException e) {
 			System.err.println("Driver non chargé !");
 			e.printStackTrace();
@@ -48,7 +45,7 @@ public class DAOFilm {
 
 	public void Lister() {
 		try {
-			String strQuery = "SELECT * FROM Film;";
+			String strQuery = "SELECT * FROM film;";
 			ResultSet rsUsers = this.stLogin.executeQuery(strQuery);
 			while (rsUsers.next()) {
 				System.out.println("Id : " + rsUsers.getInt(1) + " Titre : " + rsUsers.getString(2)
@@ -61,14 +58,14 @@ public class DAOFilm {
 
 	}
 
-	public void AjouterFilm(int id, String Titre, int sortie, String numero, int cout, int recette) {
+	public void AjouterFilm(int id, String Titre, String sortie, int numero, int cout, int recette) {
 		try {
 			String query = " insert into film (id,Titre,sortie,numero,cout,recette)" + " values (?,?,?,?,?,?);";
 			PreparedStatement preparedStmt = conn.prepareStatement(query);
 			preparedStmt.setInt(1, id);
 			preparedStmt.setString(2, Titre);
-			preparedStmt.setInt(3, sortie);
-			preparedStmt.setString(4, numero);
+			preparedStmt.setString(3, sortie);
+			preparedStmt.setInt(4, numero);
 			preparedStmt.setInt(5, cout);
 			preparedStmt.setInt(6, recette);
 			preparedStmt.execute();
@@ -78,15 +75,28 @@ public class DAOFilm {
 		}
 	}
 
-	public void DeleteFilm(int id) {
-		try {
-			String deleteQuery = "DELETE FROM film where id = " + id + ";";
-			this.stLogin.executeUpdate(deleteQuery);
-		} catch (SQLException e) {
-			System.out.println(e);
-		}
-
-	}
+	public void deleteFilm(String tableBDD, int datasId) throws SQLException{
+        try{
+            String sql = "DELETE FROM "+tableBDD+" WHERE id="+datasId+";";
+            System.out.println(sql);
+            stLogin.executeUpdate(sql);
+            System.out.println("->Suppression de la ligne "+datasId+" dans la table ["+tableBDD+"] OK");
+        } catch (SQLException e) {
+            System.err.println("Autre erreur !");
+            e.printStackTrace();
+        }
+    }
+	
+	 public void deleteFilm(String tableBDD, film film) throws SQLException{
+	        try{
+	            String sql = "DELETE FROM "+tableBDD+" WHERE id="+film.getId()+";";
+	            System.out.println(sql);
+	            stLogin.executeUpdate(sql);
+	        } catch (SQLException e) {
+	            System.err.println("Autre erreur !");
+	            e.printStackTrace();
+	        }
+	    }
 	
 	public ArrayList listReadingArrayList(String sqlQuery) throws SQLException{
         try{
@@ -98,7 +108,6 @@ public class DAOFilm {
                     resultDatas.add(newFilm);
                 }
                 conn.close();
-                System.out.println("->Sélection des datas OK");
                 return resultDatas;
         } catch (SQLException e) {
             System.err.println("Autre erreur !");
@@ -106,16 +115,86 @@ public class DAOFilm {
             return null;
         }
     }
+	
+	public String updateFilm(film film) throws SQLException{
+        String result = "Mise à jour du film non effectué.";
+        try{
+            String sql = "UPDATE `films` SET "
+                    +"`id`="+film.getId()+","
+                    +"`titre`=\""+film.getTitre()+"\","
+                    +"`anneeDeSortie`=\""+film.getAnneeSortie()+"\","
+                    +"`numeroEpisode`="+film.getNumeroEpisode()+","
+                    +"`cout`="+film.getCout()+","
+                    +"`recette`="+film.getRecette()+""
+                    +" WHERE id="+film.getId()+"";
+            System.out.println(sql);
+            stLogin.executeUpdate(sql);
+            System.out.println("->Update des datas dans la [Films] OK");
+            result = "Mise à jour du film réussi.";
+        } catch (SQLException e) {
+            System.err.println("Autre erreur !");
+            e.printStackTrace();
+        }
+        return result;
+    }
+	
+	public void addFilm(String tableBDD, film film) throws SQLException{
+        try{
+            String sql = "INSERT INTO "+tableBDD+" (`titre`, `anneeDeSortie`, `numeroEpisode`, `cout`, `recette`) VALUES ";
+            String sqlElements = "("
+                            +"\""+film.getTitre()+"\""+","
+                            +"\""+film.getAnneeSortie()+"\""+","
+                            +film.getNumeroEpisode()+","
+                            +film.getCout()+","
+                            +film.getRecette()
+                            +")";
+            sql += sqlElements;
+            System.out.println(sql);
+            stLogin.executeUpdate(sql);
+            System.out.println("->Insertion des datas dans la ["+tableBDD+"] OK");
+        } catch (SQLException e) {
+            System.err.println("Autre erreur !");
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Requète d'ajout d'un film dans une base de donnée
+     * 
+     * addFilm(Film film)
+     * @param film
+     * @return String
+     * @throws java.sql.SQLException
+     */
+    public String addFilm(film film) throws SQLException{
+        String result = "Ajout du film non effectué.";
+        try{
+            String sql = "INSERT INTO films (`titre`, `anneeDeSortie`, `numeroEpisode`, `cout`, `recette`) VALUES ";
+            String sqlElements = "("
+                            +"\""+film.getTitre()+"\""+","
+                            +"\""+film.getAnneeSortie()+"\""+","
+                            +film.getNumeroEpisode()+","
+                            +film.getCout()+","
+                            +film.getRecette()
+                            +")";
+            sql += sqlElements;
+            System.out.println(sql);
+            stLogin.executeUpdate(sql);
+            System.out.println("->Insertion des datas dans la [Films] OK");
+            result = "Ajout du film réussi.";
+        } catch (SQLException e) {
+            System.err.println("Autre erreur !");
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 	public static void main(String[] arg) {
 		Scanner sc = new Scanner(System.in);
 		DAOFilm co = new DAOFilm();
 		co.Lister();
-		System.out.println("Vous voulez supprimez quelle film ? (id) : ");
-		String id = sc.nextLine();
-		co.DeleteFilm(Integer.parseInt(id));
 		co.Lister();
-		co.AjouterFilm(2, "L'attaque des clones", 2002, "II", 500000, 560000);
+		co.AjouterFilm(2, "L'attaque des clones", "2002", 2, 500000, 560000);
 		co.Lister();
 	}
 

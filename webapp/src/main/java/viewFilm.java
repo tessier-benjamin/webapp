@@ -26,20 +26,15 @@ public class viewFilm extends HttpServlet {
 	        response.setContentType("text/html;charset=UTF-8");
 	        try (PrintWriter out = response.getWriter()) {
 
-	            /*
-	            Film filmH = new Film(0, "Là-Haut","2010", 1, 1234.123, 6443.123);
-	            daoFilm.addFilm("films", filmH);
-	             */
-	            String requetSQL = "SELECT * FROM films";
+	            String requetSQL = "SELECT * FROM film";
 	            DAOFilm daoFilm = new DAOFilm();
-	            //daoFilm.deleteFilm("films", 67);
 	            ArrayList daoFilmList = new ArrayList();
 	            daoFilmList.addAll(daoFilm.listReadingArrayList(requetSQL));
 
 	            out.println("<!DOCTYPE html>"
 	                    + "<html>"
 	                    + "<head>"
-	                    + "<title>Servlet FilmListe</title>"
+	                    + "<title>viewFilm</title>"
 	                    + "<link href=\"https://dev.ldumay.fr/resources/bootstrap/4.1.3/css/bootstrap.min.css\" rel=\"stylesheet\">"
 	                    + "<link href=\"https://dev.ldumay.fr/resources/bootstrap/4.1.3/css/bootstrap-grid.min.css\" rel=\"stylesheet\">"
 	                    + "</head>"
@@ -47,25 +42,36 @@ public class viewFilm extends HttpServlet {
 	                    + "<div class=\"container\">"
 	                    + "<div class=\"row\">"
 	                    + "<div class=\"col-12\">"
-	                    + "<h1>Liste des films <small style=\"font-size:16px;\"><a href=\"/2020-java-modelisation-web/\">[accueil]</a></small></h1>"
+	                    + "<h1>Liste des films "
+	                    + "<small style=\"font-size:16px;\">"
+	                    + "<a href=\"/webapp/addFilm\">[saisir nouveau film]</a>"
+	                    + "</small>"
+	                    + "</h1>"
 	                    + "<hr>"
-	                    //-
 	                    +"<table class=\"table\">"
 	                    + "<thead>"
 	                    + "<tr>"
 	                    + "<th scope=\"col\">Id</th>"
 	                    + "<th scope=\"col\">Titre</th>"
 	                    + "<th scope=\"col\">Année</th>"
-	                    + "<th scope=\"col\">Numéro de l'épisode</th>"
+	                    + "<th scope=\"col\">Nb épisode</th>"
 	                    + "<th scope=\"col\">Coût</th>"
 	                    + "<th scope=\"col\">Recette</th>"
 	                    + "<th scope=\"col\">Bénéfice</th>"
+	                    + "<th scope=\"col\">Modification</th>"
+	                    + "<th scope=\"col\">Suppression</th>"
 	                    + "</tr>"
 	                    + "</thead>"
 	                    + "<tbody>");
 	            
 	            for (Iterator it = daoFilmList.iterator(); it.hasNext();) {
-	            	film film = (film) it.next();
+	                film film = (film) it.next();
+	                //-
+	                String benefice = "";
+	                if(film.calculBenefice().get(0)=="true"){
+	                    benefice += "En bénéfice";
+	                } else { benefice += "En déficite"; }
+	                benefice += " / "+film.calculBenefice().get(1)+"€";
 	                out.println(""
 	                        + "<tr>"
 	                        + "<th scope=\"row\">"+film.getId()+"</th>"
@@ -74,7 +80,11 @@ public class viewFilm extends HttpServlet {
 	                        + "<td>"+film.getNumeroEpisode()+"</td>"
 	                        + "<td>"+film.getCout()+"</td>"
 	                        + "<td>"+film.getRecette()+"</td>"
-	                        + "<td>"+film.calculBenefice()+"</td>"
+	                        + "<td>"+benefice+"</td>"
+	                        //+ "<td><form method=\"post\" action=\"updateFilm\"><input type=\"text\" name=\"filmIdSelectionne\" value=\""+film.getId()+"\" hidden/><input type=\"submit\" class=\"btn btn-primary\" name=\"modifier\" value=\"modifier\"/></form></td>"
+	                        + "<td><a href=\"/webapp/updateFilm\" <img src=\"/webapp/img/crayon.png\" alt=\"Crayon\"/></a></td>"
+	                        //+ "<td><form method=\"post\" action=\"suppFilm\"><input type=\"text\" name=\"filmIdSelectionne\" value=\""+film.getId()+"\" hidden/><input type=\"submit\" class=\"btn btn-danger\" name=\"supprimer\" value=\"supprimer\"/></form></td>"
+	                        + "<td><a href=\"/webapp/suppFilm?id="+film.getId()+"\" <img src=\"/webapp/img/crayon.png\" alt=\"Crayon\"/></a></td>"
 	                        + "</tr>");
 	            }
 	            

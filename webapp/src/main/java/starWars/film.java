@@ -159,7 +159,7 @@ public class film {
 	}
 	
 	  public ArrayList calculBenefice(){
-	        double x = this.recette-this.cout;
+	        int x = this.recette-this.cout;
 	        ArrayList result = new ArrayList();
 	        if(x >= 0){
 	            result.add(true);
